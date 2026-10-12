@@ -1,161 +1,45 @@
+# Snake — C + Raylib
 
-# Snake Game in C
+An endless arcade Snake game for desktop, built in C with [Raylib](https://www.raylib.com/). Eat fruit to grow, earn points, speed up, and change the game's color theme. Includes sound effects and a stylized snake.
 
-> **Learning project & attribution:** The original terminal Snake implementation in `snake.c` was created while following a tutorial on [LabEx](https://labex.io/). It is not claimed as my original code. The Raylib desktop adaptation in `desktop/snake_raylib.c` was developed with AI assistance as a learning exercise. Original tutorial source and licensing details should be verified before redistributing tutorial-derived code.
+## Play on Ubuntu
 
-## Desktop edition (C + Raylib)
+Requires a graphical desktop, Git, CMake, a C compiler, and an internet connection for the first Raylib build.
 
-A graphical Snake version is available on the `feature/raylib-desktop` branch. It adds a native desktop window, score and level indicators, keyboard controls, pause/resume and start/game-over screens. See [DESKTOP.md](DESKTOP.md) for prerequisites and build instructions.
+```bash
+sudo apt update
+sudo apt install -y git cmake build-essential libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
 
-The desktop game is a separate implementation of Snake's gameplay rules; the original ncurses version remains in `snake.c`.
-
-A terminal-based Snake game written in C using the ncurses library.
-
-## Features
-
-- Keyboard-controlled snake movement
-- Random food generation
-- Increasing speed and difficulty
-- Level system
-- Collision detection
-- Terminal-based interface
+git clone -b feature/raylib-desktop https://github.com/emma-dasilva-dev/snake.git
+cd snake
+cmake -S . -B build
+cmake --build build -j2
+./build/snake_desktop
+```
 
 ## Controls
 
 | Key | Action |
-|-----|--------|
-| W | Move up |
-| S | Move down |
-| A | Move left |
-| D | Move right |
-| Q | Quit the game |
+| --- | --- |
+| WASD / Arrow keys | Move |
+| Enter / Space | Start or restart |
+| P / Space | Pause or resume |
+| M | Mute sound |
+| V | Toggle color effects |
+| Esc | Quit |
 
-Both uppercase and lowercase letters work.
+More details: [DESKTOP.md](DESKTOP.md).
 
-## Requirements
+## Original terminal version
 
-The game requires:
+The original `snake.c` uses **ncurses** and was written while following a tutorial on [LabEx](https://labex.io/); it is **not claimed as original code**. The desktop adaptation was developed with AI assistance as a learning project.
 
-- GCC
-- The ncurses development library
-- A Linux or macOS terminal
-
-## Run on Ubuntu or Debian
-
-Install the required tools:
+To build the terminal version on Ubuntu:
 
 ```bash
-sudo apt update
-sudo apt install gcc libncurses-dev
-```
-
-Clone the repository:
-
-```bash
-git clone https://github.com/emma-dasilva-dev/snake.git
-cd snake
-```
-
-Compile the game:
-
-```bash
-gcc -Wall -Wextra snake.c -o snake -lncurses
-```
-
-Run it:
-
-```bash
+sudo apt install -y libncurses-dev
+gcc snake.c -o snake -lncurses
 ./snake
 ```
 
-## Run on macOS
-
-Install the compiler tools if necessary:
-
-```bash
-xcode-select --install
-```
-
-Clone and enter the repository:
-
-```bash
-git clone https://github.com/emma-dasilva-dev/snake.git
-cd snake
-```
-
-Compile:
-
-```bash
-gcc -Wall -Wextra snake.c -o snake -lncurses
-```
-
-Run:
-
-```bash
-./snake
-```
-
-## Run on Windows
-
-This version does not run directly in the normal Windows Command Prompt because it uses ncurses.
-
-Windows users can use one of these options:
-
-### Option 1: Run it online
-
-Import the GitHub repository into an online Linux coding environment such as:
-
-- LabEx
-- Replit
-- GitHub Codespaces
-
-Then compile it with:
-
-```bash
-gcc -Wall -Wextra snake.c -o snake -lncurses
-./snake
-```
-
-### Option 2: Use WSL
-
-Install Windows Subsystem for Linux from PowerShell:
-
-```powershell
-wsl --install
-```
-
-After restarting the computer, open Ubuntu and install the requirements:
-
-```bash
-sudo apt update
-sudo apt install gcc libncurses-dev git
-```
-
-Then clone, compile, and run the project:
-
-```bash
-git clone https://github.com/emma-dasilva-dev/snake.git
-cd snake
-gcc -Wall -Wextra snake.c -o snake -lncurses
-./snake
-```
-
-## Project Structure
-
-```text
-snakeio/
-├── snake.c
-└── README.md
-```
-
-## What I Learned
-
-Through this project, I practised:
-
-- Writing and compiling C programs
-- Working with functions and structures
-- Using pointers and dynamic memory
-- Handling keyboard input
-- Building a game loop
-- Using the ncurses library
-- Debugging compiler errors and warnings
+The original tutorial's redistribution rights have not yet been verified.
