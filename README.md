@@ -1,21 +1,36 @@
 # Snake — C + Raylib
 
-An endless arcade Snake game for desktop, built in C with [Raylib](https://www.raylib.com/). Eat fruit to grow, earn points, speed up, and change the game's color theme. Includes sound effects and a stylized snake.
+An endless desktop arcade Snake game with sound effects, eight color themes, and a stylized snake.
 
-## Play on Ubuntu
+## Run on Ubuntu
 
-Requires a graphical desktop, Git, CMake, a C compiler, and an internet connection for the first Raylib build.
+Requires an Ubuntu graphical desktop and an internet connection for the first build.
+
+**1. Install dependencies**
 
 ```bash
 sudo apt update
-sudo apt install -y git cmake build-essential libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
+sudo apt install -y git cmake build-essential \
+  libasound2-dev libx11-dev libxrandr-dev libxi-dev \
+  libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
+```
 
+**2. Clone and build**
+
+```bash
 git clone -b feature/raylib-desktop https://github.com/emma-dasilva-dev/snake.git
 cd snake
 cmake -S . -B build
 cmake --build build -j2
+```
+
+**3. Play**
+
+```bash
 ./build/snake_desktop
 ```
+
+Raylib 5.5 is downloaded automatically by CMake. To run tests, use `ctest --test-dir build --output-on-failure`.
 
 ## Controls
 
@@ -28,18 +43,8 @@ cmake --build build -j2
 | V | Toggle color effects |
 | Esc | Quit |
 
-More details: [DESKTOP.md](DESKTOP.md).
+See [DESKTOP.md](DESKTOP.md) for more details.
 
-## Original terminal version
+## Attribution
 
-The original `snake.c` uses **ncurses** and was written while following a tutorial on [LabEx](https://labex.io/); it is **not claimed as original code**. The desktop adaptation was developed with AI assistance as a learning project.
-
-To build the terminal version on Ubuntu:
-
-```bash
-sudo apt install -y libncurses-dev
-gcc snake.c -o snake -lncurses
-./snake
-```
-
-The original tutorial's redistribution rights have not yet been verified.
+The original terminal version (`snake.c`) follows a [LabEx](https://labex.io/) tutorial and is not claimed as original code. The Raylib desktop adaptation was developed with AI assistance as a learning project. The original tutorial's redistribution rights have not yet been verified.
