@@ -151,8 +151,3 @@ Through this project, I practised:
 - Building a game loop
 - Using the ncurses library
 - Debugging compiler errors and warnings
-
-## Author
-
-Emma Da Silva  
-Junior Full-Stack Developer exploring software engineering, Linux, C, and cybersecurity.
