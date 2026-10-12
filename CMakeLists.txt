@@ -18,3 +18,13 @@ target_link_libraries(snake_desktop PRIVATE raylib)
 if (WIN32)
     target_link_libraries(snake_desktop PRIVATE winmm)
 endif()
+
+# Game-rule tests: run with `ctest --test-dir build -C Release`.
+enable_testing()
+add_executable(snake_tests tests/snake_raylib_test.c)
+target_include_directories(snake_tests PRIVATE desktop)
+target_link_libraries(snake_tests PRIVATE raylib)
+if (WIN32)
+    target_link_libraries(snake_tests PRIVATE winmm)
+endif()
+add_test(NAME snake_tests COMMAND snake_tests)
