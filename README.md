@@ -1,153 +1,50 @@
+# Snake — C + Raylib
 
-# Snake Game in C
+An endless desktop arcade Snake game with sound effects, eight color themes, and a stylized snake.
 
-A terminal-based Snake game written in C using the ncurses library.
+## Run on Ubuntu
 
-## Features
+Requires an Ubuntu graphical desktop and an internet connection for the first build.
 
-- Keyboard-controlled snake movement
-- Random food generation
-- Increasing speed and difficulty
-- Level system
-- Collision detection
-- Terminal-based interface
+**1. Install dependencies**
+
+```bash
+sudo apt update
+sudo apt install -y git cmake build-essential \
+  libasound2-dev libx11-dev libxrandr-dev libxi-dev \
+  libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
+```
+
+**2. Clone and build**
+
+```bash
+git clone -b feature/raylib-desktop https://github.com/emma-dasilva-dev/snake.git
+cd snake
+cmake -S . -B build
+cmake --build build -j2
+```
+
+**3. Play**
+
+```bash
+./build/snake_desktop
+```
+
+Raylib 5.5 is downloaded automatically by CMake. To run tests, use `ctest --test-dir build --output-on-failure`.
 
 ## Controls
 
 | Key | Action |
-|-----|--------|
-| W | Move up |
-| S | Move down |
-| A | Move left |
-| D | Move right |
-| Q | Quit the game |
+| --- | --- |
+| WASD / Arrow keys | Move |
+| Enter / Space | Start or restart |
+| P / Space | Pause or resume |
+| M | Mute sound |
+| V | Toggle color effects |
+| Esc | Quit |
 
-Both uppercase and lowercase letters work.
+See [DESKTOP.md](DESKTOP.md) for more details.
 
-## Requirements
+## Attribution
 
-The game requires:
-
-- GCC
-- The ncurses development library
-- A Linux or macOS terminal
-
-## Run on Ubuntu or Debian
-
-Install the required tools:
-
-```bash
-sudo apt update
-sudo apt install gcc libncurses-dev
-```
-
-Clone the repository:
-
-```bash
-git clone YOUR_REPOSITORY_LINK
-cd snakeio
-```
-
-Compile the game:
-
-```bash
-gcc -Wall -Wextra snake.c -o snake -lncurses
-```
-
-Run it:
-
-```bash
-./snake
-```
-
-## Run on macOS
-
-Install the compiler tools if necessary:
-
-```bash
-xcode-select --install
-```
-
-Clone and enter the repository:
-
-```bash
-git clone YOUR_REPOSITORY_LINK
-cd snakeio
-```
-
-Compile:
-
-```bash
-gcc -Wall -Wextra snake.c -o snake -lncurses
-```
-
-Run:
-
-```bash
-./snake
-```
-
-## Run on Windows
-
-This version does not run directly in the normal Windows Command Prompt because it uses ncurses.
-
-Windows users can use one of these options:
-
-### Option 1: Run it online
-
-Import the GitHub repository into an online Linux coding environment such as:
-
-- LabEx
-- Replit
-- GitHub Codespaces
-
-Then compile it with:
-
-```bash
-gcc -Wall -Wextra snake.c -o snake -lncurses
-./snake
-```
-
-### Option 2: Use WSL
-
-Install Windows Subsystem for Linux from PowerShell:
-
-```powershell
-wsl --install
-```
-
-After restarting the computer, open Ubuntu and install the requirements:
-
-```bash
-sudo apt update
-sudo apt install gcc libncurses-dev git
-```
-
-Then clone, compile, and run the project:
-
-```bash
-git clone YOUR_REPOSITORY_LINK
-cd snakeio
-gcc -Wall -Wextra snake.c -o snake -lncurses
-./snake
-```
-
-## Project Structure
-
-```text
-snakeio/
-├── snake.c
-└── README.md
-```
-
-## What I Learned
-
-Through this project, I practised:
-
-- Writing and compiling C programs
-- Working with functions and structures
-- Using pointers and dynamic memory
-- Handling keyboard input
-- Building a game loop
-- Using the ncurses library
-- Debugging compiler errors and warnings
+The original terminal version (`snake.c`) follows a [LabEx](https://labex.io/) tutorial and is not claimed as original code. The Raylib desktop adaptation was developed with AI assistance as a learning project. The original tutorial's redistribution rights have not yet been verified.
