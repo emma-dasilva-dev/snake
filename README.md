@@ -3,6 +3,20 @@
 
 A terminal-based Snake game written in C using the ncurses library.
 
+## Play in your browser
+
+A browser-based edition is included in [index.html](./index.html). It runs with no build step or external dependencies.
+
+Once GitHub Pages is enabled for the repository, play at **https://emma-dasilva-dev.github.io/snake/**.
+
+To enable Pages: **Settings → Pages → Build and deployment → Deploy from a branch → master → /(root) → Save**.
+
+You can also open `index.html` locally in a modern browser. Use arrow keys or WASD to move, Space to pause, R to restart, or use touch controls on a phone. High scores are saved in the browser.
+
+The original C/ncurses version remains available below.
+
+---
+
 ## Features
 
 - Keyboard-controlled snake movement
@@ -44,8 +58,8 @@ sudo apt install gcc libncurses-dev
 Clone the repository:
 
 ```bash
-git clone YOUR_REPOSITORY_LINK
-cd snakeio
+git clone https://github.com/emma-dasilva-dev/snake.git
+cd snake
 ```
 
 Compile the game:
@@ -71,8 +85,8 @@ xcode-select --install
 Clone and enter the repository:
 
 ```bash
-git clone YOUR_REPOSITORY_LINK
-cd snakeio
+git clone https://github.com/emma-dasilva-dev/snake.git
+cd snake
 ```
 
 Compile:
@@ -126,8 +140,8 @@ sudo apt install gcc libncurses-dev git
 Then clone, compile, and run the project:
 
 ```bash
-git clone YOUR_REPOSITORY_LINK
-cd snakeio
+git clone https://github.com/emma-dasilva-dev/snake.git
+cd snake
 gcc -Wall -Wextra snake.c -o snake -lncurses
 ./snake
 ```
@@ -135,7 +149,7 @@ gcc -Wall -Wextra snake.c -o snake -lncurses
 ## Project Structure
 
 ```text
-snakeio/
+snake/
 ├── snake.c
 └── README.md
 ```
