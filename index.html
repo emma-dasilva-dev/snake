@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e1512">
+<meta name="description" content="A modern browser edition of Snake, inspired by the original C terminal game.">
+<title>Snake — Emma Da Silva</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0e1512;color:#f1f2e8}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 15%,#213329 0,#0e1512 63%)}
+button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #c6fa79;outline-offset:4px}
+.app{width:min(100%,580px)}header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.brand{font-size:13px;letter-spacing:.18em;font-weight:800;color:#c6fa79}.edition{font-size:11px;letter-spacing:.14em;color:#94a399;text-transform:uppercase}
+h1{font-size:clamp(52px,10vw,84px);line-height:1;letter-spacing:-.08em;margin:0 0 10px;font-weight:850}.intro{color:#98a79d;margin:0 0 24px;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 14px}.stat{background:#1b2921;border:1px solid #334639;border-radius:12px;padding:12px 16px}.stat span{display:block;color:#9bad9f;font-size:10px;text-transform:uppercase;letter-spacing:.14em}.stat strong{display:block;font-size:26px;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin-top:4px}
+.board-wrap{position:relative;border:1px solid #4c6650;border-radius:17px;overflow:hidden;background:#152219;box-shadow:0 24px 80px #0005}canvas{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:#0d1712de;padding:24px;text-align:center;backdrop-filter:blur(5px)}.overlay[hidden]{display:none}.modal h2{font-size:clamp(30px,6vw,46px);letter-spacing:-.06em;margin:0 0 8px}.modal p{max-width:280px;line-height:1.5;font-size:14px;color:#abc0ac;margin:0 auto 22px}.primary{border:0;border-radius:9px;padding:13px 28px;background:#c6fa79;color:#142117;font-weight:800;transition:transform .15s,background .15s}.primary:hover{transform:translateY(-2px);background:#e1ffb9}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}.toolbar p{font-size:12px;color:#93a99a;margin:0;line-height:1.5}.secondary{background:transparent;border:1px solid #506657;border-radius:9px;padding:10px 17px;color:#e1ede2;font-size:13px}.secondary:hover{border-color:#c6fa79}.secondary:disabled{opacity:.4;cursor:not-allowed}
+.dpad{display:none;grid-template-columns:repeat(3,58px);grid-template-rows:repeat(2,52px);justify-content:center;gap:8px;margin-top:18px}.dpad button{border:1px solid #4e6653;border-radius:10px;background:#26382b;color:#e0f3d9;font-size:22px;touch-action:manipulation}.dpad button:active{background:#c6fa79;color:#142117}.up{grid-column:2}.left{grid-column:1;grid-row:2}.down{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}
+footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:25px;font-size:11px;color:#7c9181}footer a{color:#b6d8ae;text-decoration:none}footer a:hover{text-decoration:underline}
+@media(pointer:coarse),(max-width:640px){body{padding:18px}.dpad{display:grid}.toolbar p{max-width:230px}}@media(prefers-reduced-motion:reduce){.primary{transition:none}}
+</style>
+</head>
+<body>
+<main class="app">
+<header><div class="brand">EMMA / DEV</div><div class="edition">Browser edition · 2026</div></header>
+<h1>Snake<span style="color:#c6fa79">.</span></h1>
+<p class="intro">The classic game. Eat, grow, survive.</p>
+<section class="stats" aria-label="Game statistics"><div class="stat"><span>Score</span><strong id="score">0</strong></div><div class="stat"><span>Best</span><strong id="best">0</strong></div><div class="stat"><span>Level</span><strong id="level">1</strong></div></section>
+<div class="board-wrap">
+<canvas id="game" width="600" height="600" aria-label="Snake playing field, 20 by 20 cells"></canvas>
+<div class="overlay" id="overlay"><div class="modal"><h2 id="overlay-title">Ready to play?</h2><p id="overlay-text">Collect the green fruit. Don't hit the walls or your tail.</p><button class="primary" id="start">Start game →</button></div></div>
+</div>
+<div class="toolbar"><p>Move: WASD / arrow keys<br>Pause: Space · Restart: R</p><button id="pause" class="secondary" disabled>Pause</button></div>
+<div class="dpad" aria-label="Touch direction controls"><button class="up" data-direction="up" aria-label="Move up">↑</button><button class="left" data-direction="left" aria-label="Move left">←</button><button class="down" data-direction="down" aria-label="Move down">↓</button><button class="right" data-direction="right" aria-label="Move right">→</button></div>
+<footer><span>Based on the original C / ncurses game</span><a href="https://github.com/emma-dasilva-dev/snake" target="_blank" rel="noopener noreferrer">View source ↗</a></footer>
+</main>
+<script>
+(()=>{'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),levelEl=document.getElementById('level'),overlay=document.getElementById('overlay'),title=document.getElementById('overlay-title'),description=document.getElementById('overlay-text'),startButton=document.getElementById('start'),pauseButton=document.getElementById('pause');
+const N=20,CELL=canvas.width/N,dirs={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};
+let snake,dir,nextDir,food,score=0,level=1,state='ready',last=0,acc=0,raf=0,turnQueued=false;
+let best=0;try{best=Math.max(0,Number(localStorage.getItem('emma-snake-best'))||0)}catch{}bestEl.textContent=best;
+function placeFood(){const free=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!snake.some(p=>p.x===x&&p.y===y))free.push({x,y});return free.length?free[Math.floor(Math.random()*free.length)]:null}
+function reset(){snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}];dir=dirs.right;nextDir=dirs.right;food=placeFood();score=0;level=1;turnQueued=false;acc=0;scoreEl.textContent='0';levelEl.textContent='1';draw()}
+function show(heading,body,label){title.textContent=heading;description.textContent=body;startButton.textContent=label;overlay.hidden=false}
+function start(){cancelAnimationFrame(raf);reset();state='running';overlay.hidden=true;pauseButton.disabled=false;pauseButton.textContent='Pause';last=performance.now();raf=requestAnimationFrame(loop)}
+function pause(){if(state==='running'){state='paused';cancelAnimationFrame(raf);show('Paused','Take your time. Your snake is right where you left it.','Resume game');pauseButton.textContent='Resume'}else if(state==='paused')resume()}
+function resume(){if(state!=='paused')return;state='running';overlay.hidden=true;pauseButton.textContent='Pause';last=performance.now();raf=requestAnimationFrame(loop)}
+function end(won=false){state='over';cancelAnimationFrame(raf);pauseButton.disabled=true;show(won?'You cleared the board!':'Game over',won?'Perfect run. Every cell is yours.':`You scored ${score} points. Ready for another round?`,'Play again →')}
+function turn(name){const wanted=dirs[name];if(!wanted||state!=='running'||turnQueued)return;if(wanted.x===-dir.x&&wanted.y===-dir.y)return;nextDir=wanted;turnQueued=true}
+function tick(){dir=nextDir;turnQueued=false;const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};const eating=food&&head.x===food.x&&head.y===food.y;const body=eating?snake:snake.slice(0,-1);if(head.x<0||head.y<0||head.x>=N||head.y>=N||body.some(p=>p.x===head.x&&p.y===head.y)){end();return}snake.unshift(head);if(eating){score+=10;level=Math.min(12,1+Math.floor(score/50));scoreEl.textContent=score;levelEl.textContent=level;if(score>best){best=score;bestEl.textContent=best;try{localStorage.setItem('emma-snake-best',String(best))}catch{}}food=placeFood();if(!food){end(true);return}}else snake.pop()}
+function loop(now){if(state!=='running')return;acc+=Math.min(now-last,150);last=now;const interval=Math.max(65,165-(level-1)*9);if(acc>=interval){acc-=interval;tick()}draw();if(state==='running')raf=requestAnimationFrame(loop)}
+function rounded(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+function draw(){ctx.fillStyle='#152219';ctx.fillRect(0,0,600,600);ctx.strokeStyle='#26382c';ctx.lineWidth=1;for(let i=1;i<N;i++){const v=i*CELL+.5;ctx.beginPath();ctx.moveTo(v,0);ctx.lineTo(v,600);ctx.moveTo(0,v);ctx.lineTo(600,v);ctx.stroke()}if(food){const x=food.x*CELL+CELL/2,y=food.y*CELL+CELL/2;ctx.fillStyle='#f4a881';ctx.beginPath();ctx.arc(x,y,CELL*.29,0,Math.PI*2);ctx.fill();ctx.fillStyle='#b9e58b';ctx.fillRect(x,y-CELL*.38,3,6)}if(!snake)return;snake.forEach((p,i)=>{const inset=i===0?2:3;rounded(p.x*CELL+inset,p.y*CELL+inset,CELL-2*inset,CELL-2*inset,6,i===0?'#d7ff99':'#90cf6e')});const head=snake[0];if(head){const x=head.x*CELL+CELL/2,y=head.y*CELL+CELL/2;ctx.fillStyle='#213821';for(const side of [-1,1]){ctx.beginPath();if(dir.x!==0)ctx.arc(x+side*6,y+dir.y*6,2,0,Math.PI*2);else ctx.arc(x+dir.x*6,y+side*6,2,0,Math.PI*2);ctx.fill()}}}
+startButton.addEventListener('click',()=>state==='paused'?resume():start());pauseButton.addEventListener('click',pause);
+document.addEventListener('keydown',e=>{const key=e.key.toLowerCase();const map={arrowup:'up',w:'up',arrowdown:'down',s:'down',arrowleft:'left',a:'left',arrowright:'right',d:'right'};if(map[key]){e.preventDefault();turn(map[key])}else if(e.code==='Space'){e.preventDefault();if(state==='running'||state==='paused')pause()}else if(key==='r'&&!e.ctrlKey&&!e.metaKey)start();else if(key==='enter'&&(state==='ready'||state==='over'))start()});
+document.querySelectorAll('[data-direction]').forEach(b=>b.addEventListener('click',()=>turn(b.dataset.direction)));
+let touch=null;canvas.addEventListener('touchstart',e=>{const t=e.changedTouches[0];touch={x:t.clientX,y:t.clientY}},{passive:true});canvas.addEventListener('touchend',e=>{if(!touch)return;const t=e.changedTouches[0],dx=t.clientX-touch.x,dy=t.clientY-touch.y;touch=null;if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;turn(Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up')},{passive:true});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='running')pause()});reset();
+})();
+</script>
+</body></html>
