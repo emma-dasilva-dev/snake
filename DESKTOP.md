@@ -13,7 +13,7 @@ This graphical version is written in **C + raylib**. The original `snake.c` term
 
 ## Endless gameplay
 
-The game is an endless survival run on a 30 × 20 board: there is no level limit and no win screen. Each food item adds 10 points, grows the snake by one cell and advances one level, and a new food item appears on a random free cell. The run ends only when the snake hits a wall or its own body.
+The game is an endless survival run on a 30 × 20 board: there is no fixed level limit; a board-completion screen appears only if all 600 cells are filled. Each food item adds 10 points, grows the snake by one cell and advances one level, and a new food item appears on a random free cell. The run ends only when the snake hits a wall or its own body.
 
 **Speed and cap.** The snake starts at 150 ms per move and gets 10 ms faster every three levels. That gives seven gentle steps until it reaches the 80 ms cap (12.5 moves per second) at level 22. From then on the speed stays the same and the header shows `MAX SPEED`:
 
