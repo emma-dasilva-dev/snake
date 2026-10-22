@@ -2,7 +2,7 @@
 
 A graphical **Snake game written in C with raylib 5.5**. Play locally on Linux, Windows, or macOS after building from source. The game has an animated snake, generated sound effects, eight shifting color themes, and speed that increases as you eat.
 
-> **Desktop application — not a browser game.** Clone this branch and build it locally. A graphical desktop environment is required (on Windows with Ubuntu/WSL, this means working WSLg support).
+> **Desktop application — not a browser game.** This GitHub link shows the **source code**, not a playable web page or a ready-made download. To play, clone the `feature/raylib-desktop` branch, compile it, and launch the resulting executable. A graphical desktop environment is required (including working WSLg support if using Ubuntu through WSL on Windows).
 
 ## Features
 
@@ -26,12 +26,33 @@ sudo apt install -y git cmake build-essential \
 
 git clone --branch feature/raylib-desktop https://github.com/emma-dasilva-dev/snake.git
 cd snake
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j2
 ./build/snake_desktop
 ```
 
-**Already cloned?** From the project directory, run `cmake --build build -j2` followed by `./build/snake_desktop`. If this branch is not checked out, run `git fetch origin` and `git switch feature/raylib-desktop` first (provided you have no conflicting local changes).
+**Ubuntu verification (22 October 2026):** A fresh clone was configured, built, and launched successfully on Ubuntu after installing the dependencies above. This verifies one Ubuntu environment, not every Linux distribution or computer.
+
+**Already cloned?** From the project directory, run `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release` (especially after adding missing libraries), then `cmake --build build -j2` and `./build/snake_desktop`. If this branch is not checked out, run `git fetch origin` and `git switch feature/raylib-desktop` first (provided you have no conflicting local changes).
+
+### Ubuntu troubleshooting
+
+**`Xinerama headers not found; install libxinerama development package`**
+
+The raylib/GLFW build needs the Xinerama development headers. Install them and rerun the CMake configuration:
+
+```bash
+sudo apt install -y libxinerama-dev
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j2
+./build/snake_desktop
+```
+
+A `CMake Deprecation Warning` in raylib is a warning, **not** the cause of this failure. Do not attempt to launch the game until configuration and compilation have completed successfully.
+
+If `./build/snake_desktop` reports `No such file or directory`, check that the build succeeded and that you are in the repository root. If the window cannot open, run the game from an active graphical Ubuntu session and share the complete terminal error when asking for help.
+
+**No need to install raylib manually:** CMake downloads raylib 5.5 on the first configuration, so that step requires internet access.
 
 ### Windows and macOS
 
