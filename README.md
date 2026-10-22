@@ -20,20 +20,20 @@ A graphical **Snake game written in C with raylib 5.5**. Play locally on Linux, 
 
 ```bash
 sudo apt update
-sudo apt install -y git cmake build-essential \
+sudo apt install -y git make cmake build-essential \
   libasound2-dev libx11-dev libxrandr-dev libxi-dev \
   libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev
 
 git clone --branch feature/raylib-desktop https://github.com/emma-dasilva-dev/snake.git
 cd snake
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j2
-./build/snake_desktop
+make run
 ```
+
+`make run` configures and builds the game through CMake, then opens it. The first build fetches raylib 5.5 and may take longer. To build without launching, run `make`; to run tests, use `make test`; to remove generated build files, use `make clean`. GNU Make is included in Ubuntu's `build-essential` package, and is also listed explicitly above.
 
 **Ubuntu verification (22 October 2026):** A fresh clone was configured, built, and launched successfully on Ubuntu after installing the dependencies above. This verifies one Ubuntu environment, not every Linux distribution or computer.
 
-**Already cloned?** From the project directory, run `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release` (especially after adding missing libraries), then `cmake --build build -j2` and `./build/snake_desktop`. If this branch is not checked out, run `git fetch origin` and `git switch feature/raylib-desktop` first (provided you have no conflicting local changes).
+**Already cloned?** In the existing project directory, run `git pull --ff-only` to obtain the latest Makefile (after checking out the correct branch), then `make run`. If this branch is not checked out, run `git fetch origin` and `git switch feature/raylib-desktop` first (provided you have no conflicting local changes).
 
 ### Ubuntu troubleshooting
 
@@ -43,14 +43,12 @@ The raylib/GLFW build needs the Xinerama development headers. Install them and r
 
 ```bash
 sudo apt install -y libxinerama-dev
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j2
-./build/snake_desktop
+make run
 ```
 
 A `CMake Deprecation Warning` in raylib is a warning, **not** the cause of this failure. Do not attempt to launch the game until configuration and compilation have completed successfully.
 
-If `./build/snake_desktop` reports `No such file or directory`, check that the build succeeded and that you are in the repository root. If the window cannot open, run the game from an active graphical Ubuntu session and share the complete terminal error when asking for help.
+If the launch command reports `No such file or directory`, check that the build succeeded and that you are in the repository root. If the window cannot open, run the game from an active graphical Ubuntu session and share the complete terminal error when asking for help.
 
 **No need to install raylib manually:** CMake downloads raylib 5.5 on the first configuration, so that step requires internet access.
 
@@ -92,6 +90,7 @@ Tests cover movement, food placement, scoring, collisions, speed progression, re
 desktop/snake_raylib.c      C / raylib desktop game
 tests/snake_raylib_test.c   Automated game tests
 CMakeLists.txt              Native build and raylib dependency
+Makefile                    Simple Linux build/run/test/clean commands
 DESKTOP.md                  Gameplay, visuals, sound and implementation notes
 snake.c                     Earlier terminal / ncurses version
 ```
